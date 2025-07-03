@@ -15,7 +15,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        BASE_URL + "/login/",
+        BASE_URL + "/auth/login/",
         {
           email: email,
           password: password,

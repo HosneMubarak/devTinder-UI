@@ -10,7 +10,7 @@ const NavBar = () => {
   const dispatch = useDispatch();
   const handleLogout = async () => {
     try {
-      const res = await axios.get(BASE_URL + "/logout/", {
+      const res = await axios.get(BASE_URL + "/auth/logout/", {
         withCredentials: true,
       });
       if (res.status === 200) {

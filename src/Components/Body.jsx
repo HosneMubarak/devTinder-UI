@@ -12,10 +12,9 @@ const Body = () => {
   const navigate = useNavigate();
   const fetchUser = async () => {
     try {
-      const res = await axios.get(BASE_URL + "/user/", {
+      const res = await axios.get(BASE_URL + "/auth/user/", {
         withCredentials: true,
       });
-      console.log(res.data);
       dispatch(addUser(res.data));
     } catch (error) {
       error.status === 401 ? navigate("/login") : console.log(error);
