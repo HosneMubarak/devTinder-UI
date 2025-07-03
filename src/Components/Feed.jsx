@@ -24,9 +24,7 @@ const Feed = () => {
     getFeed();
   }, []);
 
-  if (!feeds || !feeds.length) return null;
-
-  return <UserCard feeds={feeds[0]} />;
+  return feeds && <UserCard feeds={feeds[0]} />;
 };
 
 export default Feed;
