@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router";
+import { BASE_URL } from "../utils/constants";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -14,14 +15,14 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:8000/api/v1/auth/login/",
+        BASE_URL + "/login/",
         {
           email: email,
           password: password,
         },
         { withCredentials: true }
       );
-      dispatch(addUser(res.data));
+      dispatch(addUser(res.data?.user));
       navigate("/");
     } catch (error) {
       setError(

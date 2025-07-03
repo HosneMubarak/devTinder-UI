@@ -1,20 +1,40 @@
+import axios from "axios";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, Links, useNavigate } from "react-router";
+import { BASE_URL } from "../utils/constants";
+import { removeUser } from "../utils/userSlice";
 
 const NavBar = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleLogout = async () => {
+    try {
+      const res = await axios.get(BASE_URL + "/logout/", {
+        withCredentials: true,
+      });
+      if (res.status === 200) {
+        dispatch(removeUser());
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const user_data = useSelector((store) => store.user);
-  console.log(user_data?.user);
   return (
     <div className="navbar bg-base-100 shadow-sm px-5">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">daisyUI</a>
+        <Link to={"/"} className="btn btn-ghost text-xl">
+          daisyUI
+        </Link>
       </div>
       <div className="flex-none flex items-center gap-2">
         {user_data && (
           <>
             <div className="flex-1">
               <span className="font-medium">
-                Welcome, {user_data.user?.username || user_data.user?.email}
+                Welcome, {user_data?.username || user_data?.email}
               </span>
             </div>
             <div className="dropdown dropdown-end">
@@ -35,16 +55,16 @@ const NavBar = () => {
                 className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
               >
                 <li>
-                  <a className="justify-between">
+                  <Link to={"/profile"} className="justify-between">
                     Profile
                     <span className="badge">New</span>
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a>Settings</a>
                 </li>
                 <li>
-                  <a>Logout</a>
+                  <a onClick={handleLogout}>Logout</a>
                 </li>
               </ul>
             </div>
