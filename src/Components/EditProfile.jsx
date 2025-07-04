@@ -3,10 +3,13 @@ import React, { useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { useNavigate } from "react-router";
+import { addUserFeed } from "../utils/userFeedSlice";
 
-const EditProfile = (user) => {
+const EditProfile = ({ user, userFeed }) => {
   const dispatch = useDispatch();
-  const { first_name, last_name, username } = user.user;
+  const { first_name, last_name, username } = user;
+  const { id, about, photo, skills } = userFeed;
   const [firstName, setFirstName] = useState(first_name);
   const [userName, setUserName] = useState(username);
   const [lastName, setLastName] = useState(last_name);
@@ -14,6 +17,10 @@ const EditProfile = (user) => {
   const [errorMessage, setErrorMessage] = useState({});
   const [showError, setShowError] = useState(true);
   const [showSucessMessage, setShowSucessMessage] = useState(true);
+  const [feedAbout, setFeedAbout] = useState(about);
+  const [photoUrl, setPhotoUrl] = useState(photo);
+  const [userFeedId] = useState(id);
+  const navigate = useNavigate();
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -27,16 +34,71 @@ const EditProfile = (user) => {
       );
       if (res.status === 200) {
         dispatch(addUser(res.data));
-        setShowError(false);
+        setShowSucessMessage(true);
         setSucessMessage("User profile update successfully.");
+        setTimeout(() => {
+          setShowSucessMessage(false);
+        }, 3000);
       }
     } catch (error) {
-      console.log(error);
-      if (error?.response && error.response.status === 400) {
-        console.log(error.response.data);
-        setErrorMessage(error.response.data);
+      if (error?.response) {
+        const status = error.response.status;
+
+        if (status === 401) {
+          navigate("/login");
+        } else if (status === 400) {
+          console.log(error.response.data);
+          setErrorMessage(error.response.data);
+          setShowError(true);
+          setTimeout(() => {
+            setShowError(false);
+          }, 3000);
+        } else {
+          console.error("Unexpected error:", error);
+        }
       } else {
-        console.error("Unexpected error:", error);
+        console.error("Unknown error:", error);
+      }
+    }
+  };
+  const handleFeed = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.put(
+        BASE_URL + "/user-feed/" + userFeedId + "/",
+        {
+          photo: photoUrl,
+          about: feedAbout,
+        },
+        { withCredentials: true }
+      );
+
+      if (res.status === 200) {
+        setShowSucessMessage(true);
+        dispatch(addUserFeed(res.data.data));
+        setSucessMessage(res.data.message);
+        setTimeout(() => {
+          setShowSucessMessage(false);
+        }, 3000);
+      }
+    } catch (error) {
+      if (error?.response) {
+        const status = error.response.status;
+
+        if (status === 401) {
+          navigate("/login");
+        } else if (status === 400) {
+          console.log(error.response.data);
+          setErrorMessage(error.response.data);
+          setShowError(true);
+          setTimeout(() => {
+            setShowError(false);
+          }, 3000);
+        } else {
+          console.error("Unexpected error:", error);
+        }
+      } else {
+        console.error("Unknown error:", error);
       }
     }
   };
@@ -86,14 +148,50 @@ const EditProfile = (user) => {
             className="input input-bordered"
             onChange={(e) => setLastName(e.target.value)}
           />
-          {showSucessMessage && sucessMessage && (
-            <div className="text-green-600 text-sm mt-4">{sucessMessage}</div>
-          )}
 
           <button type="submit" className="btn btn-primary mt-6">
             Update User Info
           </button>
         </form>
+        <form className="form-control mt-6" onSubmit={handleFeed}>
+          <label className="label mt-4" htmlFor="photoUrl">
+            <span className="label-text">Photo Url</span>
+          </label>
+          <input
+            value={photoUrl}
+            type="text"
+            id="lastName"
+            placeholder="Enter last name"
+            className="input input-bordered"
+            onChange={(e) => setPhotoUrl(e.target.value)}
+          />
+          <label className="label mt-4" htmlFor="about">
+            <span className="label-text">About</span>
+          </label>
+          <textarea
+            value={feedAbout}
+            id="about"
+            placeholder="Write something about yourself"
+            className="textarea textarea-bordered"
+            onChange={(e) => setFeedAbout(e.target.value)}
+            rows={4}
+          />
+          <button type="submit" className="btn btn-primary mt-6">
+            Update About
+          </button>
+        </form>
+        <div className="toast toast-center toast-end">
+          {showError && errorMessage.username && (
+            <div className="alert alert-error">
+              <span>{errorMessage.username[0]}</span>
+            </div>
+          )}
+          {showSucessMessage && sucessMessage && (
+            <div className="alert alert-success">
+              <span>{showSucessMessage}</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

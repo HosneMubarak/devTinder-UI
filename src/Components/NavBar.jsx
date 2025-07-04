@@ -6,6 +6,9 @@ import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../utils/userSlice";
 
 const NavBar = () => {
+  const user_data = useSelector((store) => store.user);
+  const user_feed_data = useSelector((store) => store.userFeed);
+  console.log(user_feed_data);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleLogout = async () => {
@@ -21,7 +24,7 @@ const NavBar = () => {
       console.log(error);
     }
   };
-  const user_data = useSelector((store) => store.user);
+
   return (
     <div className="navbar bg-base-100 shadow-sm px-5">
       <div className="flex-1">
@@ -43,12 +46,14 @@ const NavBar = () => {
                 role="button"
                 className="btn btn-ghost btn-circle avatar"
               >
-                <div className="w-10 rounded-full">
-                  <img
-                    alt="Tailwind CSS Navbar component"
-                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                  />
-                </div>
+                {user_feed_data && (
+                  <div className="w-12 rounded-full">
+                    <img
+                      alt="Tailwind CSS Navbar component"
+                      src={user_feed_data.photo}
+                    />
+                  </div>
+                )}
               </div>
               <ul
                 tabIndex={0}

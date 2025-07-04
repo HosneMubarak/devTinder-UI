@@ -4,8 +4,10 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addFeed } from "../utils/feedSlice";
+import { useNavigate } from "react-router";
 
 const Feed = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const feeds = useSelector((store) => store.feed);
 
@@ -16,7 +18,7 @@ const Feed = () => {
       });
       dispatch(addFeed(res?.data?.results));
     } catch (error) {
-      console.log(error);
+      error.status === 401 ? navigate("/login") : console.log(error);
     }
   };
 
