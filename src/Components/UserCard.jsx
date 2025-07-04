@@ -21,7 +21,9 @@ const userCard = (feeds) => {
         <h2 className="card-title">
           {user.first_name} {user.last_name}
         </h2>
-        <p>{about} </p>
+        <div className="w-full break-words whitespace-pre-wrap">
+          <span>{about}</span>
+        </div>
         {skills && (
           <div className="flex flex-wrap justify-center gap-2 my-2">
             {skills.map((s, index) => (
