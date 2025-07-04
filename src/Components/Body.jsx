@@ -6,7 +6,6 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
-import { addUserFeed } from "../utils/userFeedSlice";
 
 const Body = () => {
   const dispatch = useDispatch();
@@ -21,19 +20,9 @@ const Body = () => {
       error.status === 401 ? navigate("/login") : console.log(error);
     }
   };
-  const fetchUserFeed = async () => {
-    try {
-      const res = await axios.get(BASE_URL + "/user-feed/", {
-        withCredentials: true,
-      });
-      dispatch(addUserFeed(res.data?.results[0]));
-    } catch (error) {
-      error.status === 401 ? navigate("/login") : console.log(error);
-    }
-  };
+
   useEffect(() => {
     fetchUser();
-    fetchUserFeed();
   }, []);
   return (
     <div>
