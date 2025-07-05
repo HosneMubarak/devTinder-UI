@@ -16,7 +16,7 @@ const Request = () => {
 
   const getConnectionRequest = async () => {
     try {
-      const res = await axios.get(BASE_URL + "/connections/received/", {
+      const res = await axios.get(BASE_URL + "/connection/received/", {
         withCredentials: true,
       });
       if (res.status === 200) {
@@ -34,7 +34,7 @@ const Request = () => {
   const handleRequestAccept = async (Id) => {
     try {
       const res = await axios.post(
-        BASE_URL + "/connections/" + Id + "/respond/",
+        BASE_URL + "/connection/" + Id + "/respond/",
         { action: "accept" },
         { withCredentials: true }
       );
@@ -62,7 +62,7 @@ const Request = () => {
   const handleRequestIgnore = async (Id) => {
     try {
       const res = await axios.post(
-        BASE_URL + "/connections/" + Id + "/respond/",
+        BASE_URL + "/connection/" + Id + "/respond/",
         { action: "decline" },
         { withCredentials: true }
       );
@@ -92,9 +92,7 @@ const Request = () => {
     getConnectionRequest();
   }, []);
 
-  if (!requests) return null;
-
-  return (
+  return requests && requests.length > 0 ? (
     <>
       {requests.map((r) => (
         <div
@@ -135,6 +133,8 @@ const Request = () => {
         )}
       </div>
     </>
+  ) : (
+    <div className="text-center mt-5">No request found</div>
   );
 };
 

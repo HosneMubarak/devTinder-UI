@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { BASE_URL } from "../utils/constants";
 
 const Login = () => {
@@ -11,6 +11,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -76,9 +77,9 @@ const Login = () => {
 
         <div className="mt-4 text-center text-sm">
           Don’t have an account?
-          <a href="#" className="link link-primary ml-1">
+          <Link to={"/signup"} className="link link-primary ml-1">
             Sign up
-          </a>
+          </Link>
         </div>
       </div>
     </div>

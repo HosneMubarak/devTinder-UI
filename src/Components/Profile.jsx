@@ -4,9 +4,8 @@ import { useSelector } from "react-redux";
 
 const Profile = () => {
   const user = useSelector((store) => store.user);
-  const userFeed = useSelector((store) => store.userFeed);
-  console.log(user, userFeed);
-  return user && userFeed && <EditProfile user={user} userFeed={userFeed} />;
+  console.log(user);
+  return user && <EditProfile user={user} />;
 };
 
 export default Profile;

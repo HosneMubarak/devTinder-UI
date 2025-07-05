@@ -13,11 +13,17 @@ const Connection = () => {
 
   const fetchUserConnection = async () => {
     try {
-      const res = await axios.get(BASE_URL + "/connections/my-connections/", {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        BASE_URL + "/connection/accepted-connections/",
+        {
+          withCredentials: true,
+        }
+      );
       if (res.status === 200) {
         dispatch(addUserConnection(res.data));
+      }
+      if (res.status === 404) {
+        dispatch(addUserConnection([]));
       }
     } catch (error) {
       if (error.response?.status === 401) {
@@ -32,9 +38,11 @@ const Connection = () => {
     fetchUserConnection();
   }, []);
 
-  if (!userConnection) return;
-
-  return userConnection && <ConnectionCard userConnection={userConnection} />;
+  return userConnection && userConnection.length > 0 ? (
+    <ConnectionCard userConnection={userConnection} />
+  ) : (
+    <div className="text-center mt-5">No connection available</div>
+  );
 };
 
 export default Connection;
