@@ -32,6 +32,8 @@ const Connection = () => {
     fetchUserConnection();
   }, []);
 
+  if (!userConnection) return;
+
   return userConnection && <ConnectionCard userConnection={userConnection} />;
 };
 
